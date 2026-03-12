@@ -1,0 +1,24 @@
+{
+  "name": "Navigator Gas Energy Saving Solutions",
+  "short_name": "Nav Gas ESS",
+  "description": "Interactive overview of Navigator Gas energy saving solutions onboard their vessels.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#ffffff",
+  "theme_color": "#28337f",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
