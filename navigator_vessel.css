@@ -1,0 +1,244 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@700&family=IBM+Plex+Sans:wght@400;700&display=swap');
+
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  background: #fff;
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+/* ── Layout shell ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: visible;   /* allow popups to escape over the header */
+  position: relative;
+}
+
+/* ── Header ── */
+.app-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  background: #fff;
+  border-bottom: 1px solid rgba(40,51,136,.1);
+  z-index: 10;
+}
+.app-header .logo {
+  height: 48px;
+  width: auto;
+  flex-shrink: 0;
+}
+.app-header h1 {
+  font-family: 'Blinker', sans-serif;
+  font-weight: 700;
+  color: rgb(40,51,136);
+  font-size: clamp(14px, 3.5vw, 29px);
+  line-height: 1.15;
+}
+
+/* ── Error banner ── */
+#load-error {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: #c0392b;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  font-size: 13px;
+  z-index: 100;
+}
+
+/* ── Image stage ── */
+.stage {
+  flex: 1 1 0;
+  position: relative;
+  overflow: visible;   /* allow popups to overlap the header in landscape */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.img-wrap {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1556 / 438;
+  width: 100%;
+}
+
+.img-wrap > img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+
+/* ── SVG lines ── */
+.lines-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.conn-line {
+  stroke: rgb(40,51,136);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  transition: stroke-dashoffset .35s ease;
+}
+.conn-line.show { stroke-dashoffset: 0; }
+
+/* ── Hotspot dots — 16px ── */
+.dot {
+  position: absolute;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid rgb(40,51,136);
+  transform: translate(-50%,-50%);
+  cursor: pointer;
+  z-index: 5;
+  transition: background .15s, box-shadow .15s, transform .15s;
+  touch-action: manipulation;
+  outline: none;
+}
+.dot:focus-visible {
+  box-shadow: 0 0 0 3px rgba(40,51,136,.4);
+}
+.dot:active,
+.dot.active {
+  background: rgb(40,51,136);
+  transform: translate(-50%,-50%) scale(1.25);
+  box-shadow: 0 0 0 5px rgba(40,51,136,.18);
+}
+
+/* ── Desktop popup ── */
+.popup {
+  position: absolute;
+  background: rgb(242,242,242);
+  border: 1px solid rgba(40,51,136,.22);
+  border-radius: 4px;
+  padding: 12px 14px;
+  width: 340px;
+  z-index: 20;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 4px 18px rgba(0,0,0,.12);
+  transition: max-height .6s ease, opacity .3s ease .15s;
+}
+.popup.show {
+  max-height: 160px;
+  opacity: 1;
+  pointer-events: auto;
+}
+.popup.has-video.show {
+  max-height: 340px;
+}
+
+/* ── Mobile: fixed bottom sheet ── */
+@media (max-width: 600px) {
+  .app-header .logo { height: 36px; }
+
+  /* 20px dots */
+  .dot { width: 20px; height: 20px; border-width: 3px; }
+
+  .popup {
+    position: fixed !important;
+    left: 0 !important; right: 0 !important;
+    bottom: 0 !important; top: auto !important;
+    width: 100% !important;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 16px 18px 20px;
+    transform: translateY(100%);
+    opacity: 1 !important;
+    max-height: none !important;
+    transition: transform .4s cubic-bezier(.22,.61,.36,1) !important;
+    box-shadow: 0 -4px 24px rgba(0,0,0,.15) !important;
+  }
+  .popup.show {
+    transform: translateY(0) !important;
+    max-height: none !important;
+  }
+  .popup-title { font-size: 15px; }
+  .popup-body  { font-size: 14px; line-height: 1.55; }
+  .conn-line   { display: none; }
+
+  /* drag handle */
+  .popup::before {
+    content: '';
+    display: block;
+    width: 36px; height: 4px;
+    border-radius: 2px;
+    background: rgba(40,51,136,.25);
+    margin: 0 auto 12px;
+  }
+}
+
+/* ── Popup content ── */
+.popup-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: rgb(40,51,136);
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+.popup-body {
+  font-size: 12px;
+  color: #333;
+  line-height: 1.5;
+}
+.popup-img-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.popup-img-row img {
+  width: 90px; height: 90px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.popup-img-row .popup-text { flex: 1; }
+
+/* ── Embedded video ── */
+.popup-video-wrap {
+  margin-top: 8px;
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+.popup-video-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+}
+
+/* ── Overlay (mobile backdrop) ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: transparent;
+}
+.overlay.active { display: block; }
+@media (min-width: 601px) {
+  .overlay { display: none !important; }
+}
