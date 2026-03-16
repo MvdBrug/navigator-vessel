@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Nav Gas ESS">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#28337f">
+  <meta name="description" content="Navigator Gas Energy Saving Solutions – interactive vessel overview">
+  <title>Navigator Gas · Energy Saving Solutions</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="navigator_vessel.css">
+</head>
+<body>
+
+  <div class="app">
+    <header class="app-header">
+      <h1>Navigator Gas<br>Energy Saving Solutions</h1>
+    </header>
+
+    <div class="stage">
+      <div class="img-wrap" id="imgWrap">
+        <div id="zoomWrap">
+          <img src="vessel.jpg" alt="Navigator vessel side profile">
+          <svg class="lines-svg" id="svgLayer" aria-hidden="true"></svg>
+          <!-- dots injected by app.js -->
+        </div>
+        <!-- popups injected by app.js directly into <body> as position:fixed -->
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <script src="app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .catch(err => console.warn('SW registration failed:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>
