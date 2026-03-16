@@ -5,7 +5,7 @@
    updated files so users get the latest version.
    ───────────────────────────────────────────────────────────── */
 
-const CACHE_NAME = "nav-gas-ess-v7";
+const CACHE_NAME = "nav-gas-ess-v8";
 
 const urlsToCache = [
   "/",
