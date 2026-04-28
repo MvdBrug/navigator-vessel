@@ -40,7 +40,7 @@ const FEATURES = [
     body: "Frequency converters allow pumps, fans, and other electrical equipment to run only at the speed needed for the job instead of always running at full power. This avoids unnecessary electricity use, reduces engine load, and helps save fuel while also reducing wear on the equipment. Applied on seawater pumps and engine room fans.",
     top: 63,   /* css top = 100 - y → 100 - 37 */
     left: 17,
-    img: "FreqC.png",
+    img: "FreqC.jpg",
     video: null,
     category: "energy"
   },
@@ -148,7 +148,7 @@ const FEATURES = [
     ],
     top: 76,   /* 100 - 24 */
     left: 6,
-    img: "Duct.png",
+    img: "Duct.JPG",
     video: null,
     category: "hull"
   },
