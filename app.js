@@ -114,7 +114,7 @@ const FEATURES = [
   {
     id: "ultrasonic",
     title: "Propeller Ultrasonic System",
-    body: "Ultrasonic cleaning systems prevent marine growth from attaching to the propeller by using high‑frequency vibrations. A clean propeller maintains its designed shape and efficiency, helping to reduce power demand and fuel consumption.\n\nIt's important that the ultrasonic system is constantly powered, as it can prevent marine growth, but can't remove it.",
+    body: "Ultrasonic cleaning systems prevent marine growth from attaching to the propeller by using high‑frequency vibrations. A clean propeller maintains its designed shape and efficiency, helping to reduce power demand and fuel consumption.\nIt's important that the ultrasonic system is constantly powered, as it can prevent marine growth, but can't remove it.",
     top: 80,   /* 100 - 20 */
     left: 11,
     img: "Propeller_Ultrasonic_System.png",
