@@ -1,0 +1,318 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@700&family=IBM+Plex+Sans:wght@400;700&display=swap');
+
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  background: #fff;
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  overflow: hidden;
+  /* Prevent iOS Safari from auto-scaling fonts when rotating
+     from landscape back to portrait */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ── Layout shell ── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: visible;
+  position: relative;
+}
+
+/* ── Header — always in foreground above zoom ── */
+.app-header {
+  position: relative;   /* needed for z-index to work on flex item */
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  background: #fff;
+  border-bottom: 1px solid rgba(40,51,136,.1);
+  z-index: 30;          /* above popup (20) and zoom content */
+}
+.app-header h1 {
+  font-family: 'Blinker', sans-serif;
+  font-weight: 700;
+  color: rgb(40,51,136);
+  font-size: clamp(14px, 3.5vw, 29px);
+  line-height: 1.15;
+}
+
+/* ── Image stage ── */
+.stage {
+  flex: 1 1 0;
+  position: relative;
+  overflow: visible;   /* zoomed image is allowed to fill beyond its box */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+/* ── Image wrapper — aspect-ratio constrains the normal (scale=1) size ── */
+.img-wrap {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 750 / 250;
+  width: 100%;
+  /* NO overflow: hidden — zoomed content must be allowed to spill outward */
+}
+
+/* ── Zoom container (vessel image + dots + SVG all scale together) ── */
+#zoomWrap {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+#zoomWrap > img {
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── SVG connector lines ── */
+.lines-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+.conn-line {
+  stroke: rgb(40,51,136);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  transition: stroke-dashoffset .35s ease;
+}
+.conn-line.show { stroke-dashoffset: 0; }
+
+/* ── Hotspot dots ── */
+.dot {
+  position: absolute;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2.5px solid transparent;  /* colour set by JS per category */
+  /* transform managed entirely by JS (includes counter-scale) */
+  cursor: pointer;
+  z-index: 5;
+  /* only transition color/shadow — NOT transform (JS owns that) */
+  transition: background .15s, box-shadow .15s;
+  touch-action: manipulation;
+  outline: none;
+}
+.dot:focus-visible {
+  box-shadow: 0 0 0 3px rgba(40,51,136,.4);
+}
+.dot.active {
+  /* background and box-shadow set dynamically by JS to match category colour */
+  /* no transform rule here — JS handles counter-scale + active scale together */
+}
+
+/* ── Popups — always position:fixed so they work correctly at any zoom level ── */
+.popup {
+  position: fixed;
+  background: rgb(242,242,242);
+  border: 1px solid rgba(40,51,136,.22);
+  border-radius: 4px;
+  padding: 12px 14px;
+  width: 340px;
+  z-index: 20;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 4px 18px rgba(0,0,0,.12);
+  transition: max-height .6s ease, opacity .3s ease .15s;
+  /* Prevent iOS from auto-inflating fonts after orientation change */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+/* Desktop visible state */
+.popup.show {
+  max-height: 160px;
+  opacity: 1;
+  pointer-events: auto;
+}
+.popup.has-video.show {
+  max-height: 340px;
+}
+
+/* ── Portrait: slide-up bottom sheet ── */
+@media (orientation: portrait) {
+  .dot { width: 20px; height: 20px; border-width: 3px; }
+
+  .popup {
+    left: 0; right: 0;
+    bottom: 0; top: auto;
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+    padding: 16px 18px 20px;
+    max-height: none;
+    opacity: 1;
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.22,.61,.36,1);
+    box-shadow: 0 -4px 24px rgba(0,0,0,.15);
+  }
+  .popup.show {
+    transform: translateY(0);
+    max-height: none;
+    pointer-events: auto;
+  }
+  /* pin font sizes explicitly — prevents iOS Safari text inflation on rotation */
+  .popup-title { font-size: 13px !important; }
+  .popup-body  { font-size: 12px !important; line-height: 1.5 !important; }
+  .conn-line   { display: none; }  /* line hidden — popup is detached from dot */
+
+  .popup::before {
+    content: '';
+    display: block;
+    width: 36px; height: 4px;
+    border-radius: 2px;
+    background: rgba(40,51,136,.25);
+    margin: 0 auto 12px;
+  }
+}
+
+/* ── Landscape: overlay popup with connector line ── */
+@media (orientation: landscape) {
+  .conn-line { display: block; }  /* ensure lines always visible in landscape */
+  .overlay { display: none !important; }
+}
+
+/* ── Popup content ── */
+.popup-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: rgb(40,51,136);
+  margin-bottom: 5px;
+  line-height: 1.3;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.popup-body {
+  font-size: 12px;
+  color: #333;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.popup-img-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.popup-img-row img {
+  width: 90px; height: 90px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.popup-img-row .popup-text { flex: 1; }
+
+/* ── Dual-feature divider ── */
+.popup-pair-divider {
+  height: 10px;
+}
+
+/* ── Pair popups need more room in landscape ── */
+.popup.is-pair.show {
+  max-height: 240px;
+}
+
+/* ── Embedded video ── */
+.popup-video-wrap {
+  margin-top: 8px;
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+}
+.popup-video-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+}
+
+/* ── Overlay (portrait backdrop, below popups) ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: transparent;
+}
+.overlay.active { display: block; }
+@media (orientation: landscape) {
+  .overlay { display: none !important; }
+}
+
+/* ── Landscape: compact header + white background ── */
+@media (orientation: landscape) {
+  .app-header {
+    padding: 4px 13px;
+  }
+  .app-header h1 {
+    font-size: clamp(10px, 2.4vw, 20px);
+    line-height: 1.1;
+  }
+  html, body { background: #fff; }
+  .app       { background: #fff; }
+  .stage     { background: #fff; }
+  .img-wrap  { background: #fff; }
+}
+
+/* ── Category legend ── */
+.legend {
+  position: fixed;
+  bottom: 12px;
+  right: 14px;
+  z-index: 10;          /* above vessel, below popup (20) and overlay (19) */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  pointer-events: none;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid;    /* colour set inline */
+  flex-shrink: 0;
+}
+.legend-label {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  color: #333;
+  line-height: 1;
+}
+
+@media (orientation: landscape) {
+  .legend { bottom: 8px; right: 10px; gap: 4px; }
+  .legend-dot  { width: 10px; height: 10px; }
+  .legend-label { font-size: 10px; }
+}
