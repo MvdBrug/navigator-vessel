@@ -61,7 +61,7 @@ const FEATURES = [
     title: "High Performance Anti-Fouling",
     body: "High performance anti fouling keeps the hull smooth by preventing marine growth such as algae and barnacles. A smooth hull creates less drag in the water, allowing the ship to maintain speed with lower power and reduced fuel consumption.",
     top: 79,   /* 100 - 21 */
-    left: 41,
+    left: 47,
     img: "HP_anti_fouling.png",
     video: null,
     category: "hull"
@@ -71,8 +71,8 @@ const FEATURES = [
     id: "trim",
     title: "Trim Optimization",
     body: "Having the optimized vessel trim for each load condition reduces the resistance in the water, improves propulsion efficiency, and lowers fuel usage.",
-    top: 82,   /* 100 - 18 */
-    left: 72,
+    top: 79,   /* 100 - 21 */
+    left: 85,
     img: "Trim_Optimization.png",
     video: null,
     category: "operational"
@@ -165,7 +165,7 @@ const FEATURES = [
         body: "Propeller optimization ensures the propeller design and condition match the vessel's actual operating profile. An optimized propeller delivers the required thrust more efficiently, allowing the ship to sail at the same speed with lower fuel consumption."
       }
     ],
-    top: 81,   /* 100 - 19 */
+    top: 80,   /* 100 - 20 */
     left: 6,
     img: "Optimized_propeller.jpg",
     video: null,
