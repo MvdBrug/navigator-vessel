@@ -62,7 +62,7 @@ const FEATURES = [
     body: "High performance anti fouling keeps the hull smooth by preventing marine growth such as algae and barnacles. A smooth hull creates less drag in the water, allowing the ship to maintain speed with lower power and reduced fuel consumption.",
     top: 79,   /* 100 - 21 */
     left: 41,
-    img: "High_performance_anti_fouling.png",
+    img: "HP_anti_fouling.png",
     video: null,
     category: "hull"
   },
@@ -148,7 +148,7 @@ const FEATURES = [
     ],
     top: 76,   /* 100 - 24 */
     left: 6,
-    img: "Propeller_Duct_and_Rudder_Bulb.png",
+    img: "Propeller_Duct_Rudder_Bulb.png",
     video: null,
     category: "hull"
   },
@@ -167,7 +167,7 @@ const FEATURES = [
     ],
     top: 81,   /* 100 - 19 */
     left: 6,
-    img: "OPtimized_propeller.jpg",
+    img: "Optimized_propeller.jpg",
     video: null,
     category: "hull"
   }
