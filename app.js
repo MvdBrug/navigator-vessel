@@ -148,7 +148,7 @@ const FEATURES = [
     ],
     top: 76,   /* 100 - 24 */
     left: 6,
-    img: "Propeller_Duct_Rudder_Bulb.png",
+    img: "Duct.png",
     video: null,
     category: "hull"
   },
