@@ -16,13 +16,17 @@ const urlsToCache = [
   "/logo.png",
   "/icon-192.png",
   "/icon-512.png",
-  "/vessel.jpg",
-  "/PBCF.jpg",
-  "/VFD.png",
-  "/LED.png",
-  "/Duct.jpg",
-  "/AF.jpg",
-  "/Trim.jpg"
+  "/Crew_awareness.png",
+  "/Duct.JPG",
+  "/Electrical_Preheater.JPG",
+  "/FreqC.jpg",
+  "/HP_anti_fouling.png",
+  "/LED.jpg",
+  "/Optimized_propeller.jpg",
+  "/PUSS.JPG",
+  "/Trim_Optimization.png",
+  "/Vessel.svg",
+  "/Weather_routing.png",
 ];
 
 /* Install: cache all assets */
